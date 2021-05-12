@@ -27,6 +27,7 @@ struct CourseList *course_list_load(const char *file_path)
     while (!feof(file))
     {
         struct Course course = course_empty();
+
         csv_read_string(file, (char *)course.name);
         csv_read_string(file, (char *)course.title);
         csv_read_string(file, (char *)course.semester_name);

@@ -4,6 +4,7 @@
 #include "course_list.h"
 #include "helpers.h"
 #include "course.h"
+#define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 
 void course_actions_view_specific(struct CourseList *course_list, size_t index)
 {
@@ -14,7 +15,7 @@ void course_actions_view_specific(struct CourseList *course_list, size_t index)
 
 void course_actions_view(struct CourseList *course_list)
 {
-    printf("Global actions: a, h\nID\tName\tTitle\t\t\tSemester\tCredits\t\tGrade Points\tActions\n");
+    printf("Global actions: a, h, s\nID\tName\tTitle\t\t\tSemester\tCredits\t\tGrade Points\tActions\n");
     for (int i = 0; i < course_list->quantity; i++)
         course_actions_view_specific(course_list, i);
 }
@@ -36,6 +37,8 @@ void course_actions_process(struct CourseList *course_list, char *action)
         course_actions_help(course_list);
     else if (command == 'a')
         course_actions_add(course_list);
+    else if (command == 's')
+        course_actions_summary(course_list);
     else
         printf("Unrecognized action. Please try again.\n");
 }
@@ -111,7 +114,7 @@ void course_actions_remove(struct CourseList *course_list, size_t index)
 
 void course_actions_help(struct CourseList *course_list)
 {
-    printf("Commands:\nh: Help\na: Add a new course\nu[id]: Update a specific course based on its ID\nr[id]: Remove a specific course based on its ID\n");
+    printf("\nActions:\nh: Help\ns: Summary\na: Add a new course\nu[id]: Update a specific course based on its ID\nr[id]: Remove a specific course based on its ID\n\n");
 }
 
 void course_actions_add(struct CourseList *course_list)
@@ -162,4 +165,16 @@ void course_actions_add(struct CourseList *course_list)
 
     course_list_add(course_list, course);
     course_list_save(course_list);
+}
+
+void course_actions_summary(struct CourseList *course_list)
+{
+    float total_credits = 0, total_grade_points = 0;
+    for (size_t i = 0; i < course_list->quantity; i++)
+    {
+        total_grade_points += course_list->items[i].grade_points;
+        total_credits += MIN(course_list->items[i].credits_counted, course_list->items[i].credits_passed);
+    }
+
+    printf("\nSummary:\nCGPA: %.2f\n\n", total_grade_points / total_credits);
 }
