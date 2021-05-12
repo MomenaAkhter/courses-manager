@@ -1,5 +1,5 @@
-#ifndef __CSVWRITESESSION_H__
-#define __CSVWRITESESSION_H__
+#ifndef __STRUCT_CSVWRITESESSION_H__
+#define __STRUCT_CSVWRITESESSION_H__
 
 #include <stdbool.h>
 
@@ -11,4 +11,4 @@ struct CsvWriteSession
     FILE *file;
 };
 
-#endif // __CSVWRITESESSION_H__
+#endif // __STRUCT_CSVWRITESESSION_H__

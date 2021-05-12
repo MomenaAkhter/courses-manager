@@ -3,6 +3,7 @@
 #include "structs/Course.h"
 #include "course_list.h"
 #include "course_actions.h"
+#include "helpers.h"
 
 int main()
 {

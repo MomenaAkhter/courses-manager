@@ -1,5 +1,5 @@
-#ifndef __COURSE_H__
-#define __COURSE_H__
+#ifndef __STRUCT_COURSE_H__
+#define __STRUCT_COURSE_H__
 
 struct Course
 {
@@ -11,4 +11,4 @@ struct Course
     float grade_points;
 };
 
-#endif // __COURSE_H__
+#endif // __STRUCT_COURSE_H__

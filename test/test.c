@@ -45,7 +45,7 @@ int main()
     course_list_add(course_list, (struct Course){.name = "CSE425", .title = "Hey now fuck cow!", .semester_name = "Fuck you", .credits_counted = 3, .credits_passed = 3, .grade_points = 9});
     assert(course_list_quantity(course_list) == 3, "Course list should be 3 in size");
 
-    course_list_delete(course_list, 0);
+    course_list_remove(course_list, 0);
 
     assert(course_list_quantity(course_list) == 2, "Course list should be 2 in size");
     assert_str_eq(course_list_get(course_list, 0)->name, "CSE373");

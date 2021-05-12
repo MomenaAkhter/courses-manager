@@ -1,3 +1,10 @@
+#include <ctype.h>
+#include <string.h>
+#include <stdio.h>
+#include "helpers.h"
+#include "structs/CourseList.h"
+#include "course_list.h"
+
 char *trim(char *str)
 {
     char *end;

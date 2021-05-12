@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <string.h>
 #include "course_list.h"
 #include "structs/CourseList.h"
 #include "structs/CsvWriteSession.h"
 #include "csv.h"
+#include "course.h"
 
 struct CourseList *course_list_empty()
 {
@@ -24,11 +26,7 @@ struct CourseList *course_list_load(const char *file_path)
 
     while (!feof(file))
     {
-        struct Course course;
-        course.name = (const char *)calloc(7, sizeof(char));
-        course.title = (const char *)calloc(51, sizeof(char));
-        course.semester_name = (const char *)calloc(31, sizeof(char));
-
+        struct Course course = course_empty();
         csv_read_string(file, (char *)course.name);
         csv_read_string(file, (char *)course.title);
         csv_read_string(file, (char *)course.semester_name);
@@ -41,12 +39,16 @@ struct CourseList *course_list_load(const char *file_path)
 
     fclose(file);
 
+    course_list->source = (const char *)realloc((char *)course_list->source, sizeof(char) * 101);
+    strcpy((char *)course_list->source, file_path);
+
     return course_list;
 }
 
-bool course_list_save(struct CourseList *course_list, const char *file_path)
+bool course_list_save(struct CourseList *course_list)
 {
-    FILE *file = fopen(file_path, "w");
+    FILE *file = fopen("courses2.csv", "w"); // DEBUG
+    // FILE *file = fopen(course_list->source, "w");
 
     if (file == NULL)
         return false;
@@ -108,7 +110,7 @@ bool course_list_update(struct CourseList *course_list, size_t index, struct Cou
     return true;
 }
 
-bool course_list_delete(struct CourseList *course_list, size_t index)
+bool course_list_remove(struct CourseList *course_list, size_t index)
 {
     if (index >= course_list->quantity)
         return false;

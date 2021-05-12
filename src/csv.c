@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <ctype.h>
 #include "csv.h"
 
 void csv_read_string(FILE *file, char *string)
@@ -9,7 +10,7 @@ void csv_read_string(FILE *file, char *string)
         char c;
         fscanf(file, "%c", &c);
 
-        if ((c == ' ' || c == '\n' || c == '\t') && j == 0)
+        if (isspace(c) && j == 0)
             continue;
 
         if (c == ',' || feof(file))
