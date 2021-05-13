@@ -11,9 +11,9 @@ void course_actions_view_specific(struct Course *course, size_t index, bool show
     if (course != NULL)
     {
         if (show_id)
-            printf("%lu\t%s\t%s\t\t%s\t%.2f / %.2f\t%.2f\t\tu%lu, r%lu\n", index + 1, course->name, course->title, course->semester_name, course->credits_passed, course->credits_counted, course->grade_points, index + 1, index + 1);
+            printf("%lu\t%-10.6s%-28.24s%-11.11s\t%.2f / %.2f\t%.2f\t\tu%lu, r%lu\n", index + 1, course->name, course->title, course->semester_name, course->credits_passed, course->credits_counted, course->grade_points, index + 1, index + 1);
         else
-            printf("%s\t%s\t\t%s\t%.2f / %.2f\t%.2f\n", course->name, course->title, course->semester_name, course->credits_passed, course->credits_counted, course->grade_points);
+            printf("%-10.6s%-28.24s%-11.11s\t%.2f / %.2f\t%.2f\n", course->name, course->title, course->semester_name, course->credits_passed, course->credits_counted, course->grade_points);
     }
 }
 
@@ -30,7 +30,7 @@ void course_actions_view(struct CourseList *course_list)
 void course_actions_view_range(struct Course *begin, size_t length, bool show_id)
 {
     print_yellow(true);
-    printf("%sName\tTitle\t\t\tSemester\tCredits\t\tGrade Points%s\n", show_id ? "ID\t" : "", show_id ? "\tActions" : "");
+    printf("%s%-10.6s%-28.24s%-11.11s\tCredits\t\tGrade Points%s\n", show_id ? "ID\t" : "", "Name", "Title", "Semester", show_id ? "\tActions" : "");
     print_reset();
 
     print_reset();
@@ -82,7 +82,7 @@ void course_actions_update(struct CourseList *course_list, size_t index)
 
     course_actions_view_range(course_list->items + index, 1, false);
 
-    printf("\nPlease enter the new properties (leave blank for skipping):\n\n");
+    printf("\nPlease enter the new properties (leave blank for skipping a property):\n\n");
 
     printf("Name: ");
     char name[7];
