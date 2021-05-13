@@ -57,3 +57,31 @@ void heading(const char *text)
     printf("\n");
     print_reset();
 }
+
+// Determine the grade using NSU's policies
+void grade(float grade_points, float credits, char *string)
+{
+    float grade_points_average = grade_points / credits;
+    if (grade_points_average == 4)
+        strcpy(string, "A");
+    else if (grade_points_average >= 3.7)
+        strcpy(string, "A-");
+    else if (grade_points_average >= 3.3)
+        strcpy(string, "B+");
+    else if (grade_points_average >= 3)
+        strcpy(string, "B");
+    else if (grade_points_average >= 2.7)
+        strcpy(string, "B-");
+    else if (grade_points_average >= 2.3)
+        strcpy(string, "C+");
+    else if (grade_points_average >= 2)
+        strcpy(string, "C");
+    else if (grade_points_average >= 1.7)
+        strcpy(string, "C-");
+    else if (grade_points_average >= 1.3)
+        strcpy(string, "D+");
+    else if (grade_points_average >= 1)
+        strcpy(string, "D");
+    else
+        strcpy(string, "F");
+}

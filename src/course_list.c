@@ -126,6 +126,12 @@ bool course_list_remove(struct CourseList *course_list, size_t index)
 
 void course_list_free(struct CourseList *course_list)
 {
+    for (int i = 0; i < course_list->quantity; i++)
+    {
+        free((char *)course_list->items[i].name);
+        free((char *)course_list->items[i].title);
+        free((char *)course_list->items[i].semester_name);
+    }
     free(course_list->items);
     free(course_list);
 }

@@ -11,9 +11,9 @@ void course_actions_view_specific(struct Course *course, size_t index, bool show
     if (course != NULL)
     {
         if (show_id)
-            printf("%lu\t%-10.6s%-28.24s%-11.11s\t%.2f / %.2f\t%.2f\t\tu%lu, r%lu\n", index + 1, course->name, course->title, course->semester_name, course->credits_passed, course->credits_counted, course->grade_points, index + 1, index + 1);
+            printf("%lu\t%-10.7s%-28.24s%-11.11s\t%.2f / %.2f\t%.2f\t\tu%lu, r%lu\n", index + 1, course->name, course->title, course->semester_name, course->credits_passed, course->credits_counted, course->grade_points, index + 1, index + 1);
         else
-            printf("%-10.6s%-28.24s%-11.11s\t%.2f / %.2f\t%.2f\n", course->name, course->title, course->semester_name, course->credits_passed, course->credits_counted, course->grade_points);
+            printf("%-10.7s%-28.24s%-11.11s\t%.2f / %.2f\t%.2f\n", course->name, course->title, course->semester_name, course->credits_passed, course->credits_counted, course->grade_points);
     }
 }
 
@@ -24,13 +24,13 @@ void course_actions_view(struct CourseList *course_list)
 
     course_actions_view_range(course_list->items, course_list->quantity, true);
 
-    printf("\nGlobal actions: a, h, s, v\n\n");
+    printf("\nGlobal actions: a, h, s, o, v\n\n");
 }
 
 void course_actions_view_range(struct Course *begin, size_t length, bool show_id)
 {
     print_yellow(true);
-    printf("%s%-10.6s%-28.24s%-11.11s\tCredits\t\tGrade Points%s\n", show_id ? "ID\t" : "", "Name", "Title", "Semester", show_id ? "\tActions" : "");
+    printf("%s%-10.7s%-28.24s%-11.11s\tCredits\t\tGrade Points%s\n", show_id ? "ID\t" : "", "Name", "Title", "Semester", show_id ? "\tActions" : "");
     print_reset();
 
     print_reset();
@@ -55,8 +55,10 @@ void course_actions_process(struct CourseList *course_list, char *action)
         course_actions_help(course_list);
     else if (command == 'a')
         course_actions_add(course_list);
+    else if (command == 'o')
+        course_actions_overview(course_list);
     else if (command == 's')
-        course_actions_summary(course_list);
+        course_actions_search(course_list);
     else
     {
         print_red(false);
@@ -184,7 +186,7 @@ void course_actions_help(struct CourseList *course_list)
 {
     printf("\n");
     heading("Help");
-    printf("h: Help\nv: View all courses\ns: Summary\na: Add a new course\nu[id]: Update a specific course based on its ID\nr[id]: Remove a specific course based on its ID\n\n");
+    printf("h: Help\nv: View all courses\no: Overview\na: Add a new course\nu[id]: Update a specific course based on its ID\nr[id]: Remove a specific course based on its ID\ns: Search for courses\n\n");
 }
 
 void course_actions_add(struct CourseList *course_list)
@@ -253,7 +255,7 @@ void course_actions_add(struct CourseList *course_list)
     printf("\n");
 }
 
-void course_actions_summary(struct CourseList *course_list)
+void course_actions_overview(struct CourseList *course_list)
 {
     float total_credits = 0, total_grade_points = 0;
     for (size_t i = 0; i < course_list->quantity; i++)
@@ -264,7 +266,42 @@ void course_actions_summary(struct CourseList *course_list)
 
     print_yellow(false);
     printf("\n");
-    heading("Summary");
+    heading("Overview");
+    printf("\n");
     print_reset();
-    printf("CGPA: %.2f\n\n", total_grade_points / total_credits);
+
+    printf("CGPA: %.2f\nTotal Grade Points: %.2f\nTotal Credits: %.2f\n\n", total_grade_points / total_credits, total_grade_points, total_credits);
+}
+
+void course_actions_search(struct CourseList *course_list)
+{
+    printf("\n");
+    heading("Search");
+
+    printf("\nQuery: ");
+    char query[100];
+    fflush(stdin);
+    fgets(query, 100, stdin);
+    char *query_trimmed = trim(query);
+
+    if (strlen(query_trimmed) > 0)
+    {
+        printf("\n");
+        course_actions_view_range(NULL, 0, true);
+        for (size_t i = 0; i < course_list->quantity; i++)
+        {
+            if (strstr(course_list->items[i].name, query_trimmed) != NULL || strstr(course_list->items[i].title, query_trimmed) != NULL || strstr(course_list->items[i].semester_name, query_trimmed) != NULL)
+            {
+                course_actions_view_specific(course_list->items + i, i, true);
+            }
+        }
+    }
+    else
+    {
+        print_red(false);
+        printf("\nCan't accept blank queries.\n");
+        print_reset();
+    }
+
+    printf("\n");
 }

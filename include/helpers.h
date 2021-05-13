@@ -10,5 +10,6 @@ void print_yellow(bool);
 void print_purple(bool);
 void print_reset();
 void heading(const char *);
+void grade(float, float, char *);
 
 #endif // __HELPERS_H__
