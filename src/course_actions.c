@@ -260,10 +260,29 @@ void course_actions_add(struct CourseList *course_list)
 void course_actions_overview(struct CourseList *course_list)
 {
     float total_credits = 0, total_grade_points = 0;
+    const char **semester_names = (const char **)calloc(0, sizeof(const char *));
+    size_t semester_names_count = 0;
     for (size_t i = 0; i < course_list->quantity; i++)
     {
         total_grade_points += course_list->items[i].grade_points;
         total_credits += MIN(course_list->items[i].credits_counted, course_list->items[i].credits_passed);
+
+        bool semester_name_found = false;
+        for (int j = 0; j < semester_names_count; j++)
+        {
+            if (strcmp(course_list->items[i].semester_name, semester_names[j]) == 0)
+            {
+                semester_name_found = true;
+                break;
+            }
+        }
+
+        if (!semester_name_found)
+        {
+            semester_names = (const char **)realloc(semester_names, (semester_names_count + 1) * sizeof(const char *));
+            semester_names[semester_names_count] = course_list->items[i].semester_name;
+            semester_names_count++;
+        }
     }
 
     print_yellow(false);
@@ -272,7 +291,50 @@ void course_actions_overview(struct CourseList *course_list)
     printf("\n");
     print_reset();
 
-    printf("CGPA: %.2f\nTotal Grade Points: %.2f\nTotal Credits: %.2f\n\n", total_grade_points / total_credits, total_grade_points, total_credits);
+    printf("CGPA: %.2f\nTotal Grade Points: %.2f\nTotal Credits: %.2f\n", total_grade_points / total_credits, total_grade_points, total_credits);
+
+    size_t best_semester = 0, worst_semester = 0;
+    float best_semester_tgpa = -1, worst_semester_tgpa = -1;
+    printf("\nTGPAs:\n");
+    for (size_t i = 0; i < semester_names_count; i++)
+    {
+        printf("\t%s: ", semester_names[i]);
+        float total_grade_points = 0, total_credits = 0;
+        for (size_t j = 0; j < course_list->quantity; j++)
+        {
+            if (strcmp(course_list->items[j].semester_name, semester_names[i]) == 0)
+            {
+                total_grade_points += course_list->items[j].grade_points;
+                total_credits += MIN(course_list->items[j].credits_counted, course_list->items[j].credits_passed);
+            }
+        }
+        float tgpa = total_grade_points / total_credits;
+        printf("\t%.2f\n", tgpa);
+
+        if (i == 0)
+        {
+            best_semester_tgpa = tgpa;
+            worst_semester_tgpa = tgpa;
+        }
+        else
+        {
+            if (tgpa < worst_semester_tgpa)
+            {
+                worst_semester_tgpa = tgpa;
+                worst_semester = i;
+            }
+            if (tgpa > best_semester_tgpa)
+            {
+                best_semester_tgpa = tgpa;
+                best_semester = i;
+            }
+        }
+    }
+
+    printf("Best semester: %s (%.2f)\n", semester_names[best_semester], best_semester_tgpa);
+    printf("Worst semester: %s (%.2f)\n", semester_names[worst_semester], worst_semester_tgpa);
+
+    printf("\n");
 }
 
 void course_actions_search(struct CourseList *course_list)
