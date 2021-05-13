@@ -13,13 +13,11 @@ int main()
     strcpy(action, "v");
     while (strcmp(action, "q") != 0)
     {
-        course_actions_process(course_list, action);
+        course_actions_process(&course_list, action);
 
         printf("Action: ");
         scanf("%s", action);
     }
-
-    // course_list_save(course_list, "courses2.csv");
 
     return 0;
 }

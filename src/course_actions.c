@@ -24,7 +24,7 @@ void course_actions_view(struct CourseList *course_list)
 
     course_actions_view_range(course_list->items, course_list->quantity, true);
 
-    printf("\nGlobal actions: a, h, s, o, v\n\n");
+    printf("\nGlobal actions: a, h, s, o, v, l\n\n");
 }
 
 void course_actions_view_range(struct Course *begin, size_t length, bool show_id)
@@ -38,7 +38,7 @@ void course_actions_view_range(struct Course *begin, size_t length, bool show_id
         course_actions_view_specific(i, i - begin, show_id);
 }
 
-void course_actions_process(struct CourseList *course_list, char *action)
+void course_actions_process(struct CourseList **course_list_handle, char *action)
 {
     char command;
     size_t index;
@@ -46,19 +46,21 @@ void course_actions_process(struct CourseList *course_list, char *action)
     sscanf(action, "%c%lu", &command, &index);
 
     if (command == 'v')
-        course_actions_view(course_list);
+        course_actions_view(*course_list_handle);
     else if (command == 'u')
-        course_actions_update(course_list, index - 1);
+        course_actions_update(*course_list_handle, index - 1);
     else if (command == 'r')
-        course_actions_remove(course_list, index - 1);
+        course_actions_remove(*course_list_handle, index - 1);
     else if (command == 'h')
-        course_actions_help(course_list);
+        course_actions_help(*course_list_handle);
     else if (command == 'a')
-        course_actions_add(course_list);
+        course_actions_add(*course_list_handle);
     else if (command == 'o')
-        course_actions_overview(course_list);
+        course_actions_overview(*course_list_handle);
     else if (command == 's')
-        course_actions_search(course_list);
+        course_actions_search(*course_list_handle);
+    else if (command == 'l')
+        course_actions_load(course_list_handle);
     else
     {
         print_red(false);
@@ -186,7 +188,7 @@ void course_actions_help(struct CourseList *course_list)
 {
     printf("\n");
     heading("Help");
-    printf("h: Help\nv: View all courses\no: Overview\na: Add a new course\nu[id]: Update a specific course based on its ID\nr[id]: Remove a specific course based on its ID\ns: Search for courses\n\n");
+    printf("h: Help\nv: View all courses\no: Overview\na: Add a new course\nu[id]: Update a specific course based on its ID\nr[id]: Remove a specific course based on its ID\ns: Search for courses\nl: Load CSV file.\n\n");
 }
 
 void course_actions_add(struct CourseList *course_list)
@@ -304,4 +306,12 @@ void course_actions_search(struct CourseList *course_list)
     }
 
     printf("\n");
+}
+
+void course_actions_load(struct CourseList **course_list_handle)
+{
+    char file_path[101];
+    strcpy(file_path, (*course_list_handle)->source);
+    course_list_free(*course_list_handle);
+    *course_list_handle = course_list_load(file_path);
 }
