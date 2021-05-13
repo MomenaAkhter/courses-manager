@@ -26,3 +26,34 @@ char *trim(char *str)
 
     return str;
 }
+
+void print_red(bool bold)
+{
+    printf(bold ? "\033[1;31m" : "\033[0;31m");
+}
+void print_green(bool bold)
+{
+    printf(bold ? "\033[1;32m" : "\033[0;32m");
+}
+void print_yellow(bool bold)
+{
+    printf(bold ? "\033[1;33m" : "\033[0;33m");
+}
+void print_purple(bool bold)
+{
+    printf(bold ? "\033[1;35m" : "\033[0;35m");
+}
+void print_reset()
+{
+    printf("\033[0m");
+}
+
+void heading(const char *text)
+{
+    print_yellow(false);
+    printf("%s\n", text);
+    for (int i = 0; i < strlen(text); i++)
+        printf("=");
+    printf("\n");
+    print_reset();
+}
