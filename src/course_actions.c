@@ -15,10 +15,18 @@ ID: 162 0763 042
 void course_actions_view_specific(struct Course* course, size_t index, bool show_id)
 {
     if (course != NULL) {
+        // char format[70];
+        // sprintf(format, "%s%-10.7s%-28.24s%-11.11s%.2f%s\n", show_id ? "%lu\t" : "", course->name, course->title, course->semester_name, 1.0f, show_id ? "\t\tu%lu, r%lu" : "");
+
+        // printf("%s\n", format);
+
+        char grade_string[3];
+        grade(course->grade_points, MIN(course->credits_counted, course->credits_passed), grade_string);
+
         if (show_id)
-            printf("%lu\t%-10.7s%-28.24s%-11.11s\t%.2f / %.2f\t%.2f\t\tu%lu, r%lu\n", index + 1, course->name, course->title, course->semester_name, course->credits_passed, course->credits_counted, course->grade_points, index + 1, index + 1);
+            printf("%lu\t%-10.7s%-28.24s%-11.11s\t%.2f / %.2f\t%.2f (%s)\tu%lu, r%lu\n", index + 1, course->name, course->title, course->semester_name, course->credits_passed, course->credits_counted, course->grade_points, grade_string, index + 1, index + 1);
         else
-            printf("%-10.7s%-28.24s%-11.11s\t%.2f / %.2f\t%.2f\n", course->name, course->title, course->semester_name, course->credits_passed, course->credits_counted, course->grade_points);
+            printf("%-10.7s%-28.24s%-11.11s\t%.2f / %.2f\t%.2f (%s)\n", course->name, course->title, course->semester_name, course->credits_passed, course->credits_counted, course->grade_points, grade_string);
     }
 }
 

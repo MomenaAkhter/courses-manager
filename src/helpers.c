@@ -7,6 +7,7 @@ ID: 162 0763 042
 #include "course_list.h"
 #include "structs/CourseList.h"
 #include <ctype.h>
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -74,26 +75,33 @@ void heading(const char* text)
 // Determine the grade using NSU's policies
 void grade(float grade_points, float credits, char* string)
 {
-    float grade_points_average = grade_points / credits;
-    if (grade_points_average == 4)
+    if (credits == 0) {
+        strcpy(string, "F");
+        return;
+    }
+
+    // Round the floating-point value to the nearest decimal place
+    float grade_points_average = roundf(grade_points / credits * 10) / 10;
+
+    if (grade_points_average == 4.0f)
         strcpy(string, "A");
-    else if (grade_points_average >= 3.7)
+    else if (grade_points_average == 3.7f)
         strcpy(string, "A-");
-    else if (grade_points_average >= 3.3)
+    else if (grade_points_average == 3.3f)
         strcpy(string, "B+");
-    else if (grade_points_average >= 3)
+    else if (grade_points_average == 3.0f)
         strcpy(string, "B");
-    else if (grade_points_average >= 2.7)
+    else if (grade_points_average == 2.7f)
         strcpy(string, "B-");
-    else if (grade_points_average >= 2.3)
+    else if (grade_points_average == 2.3f)
         strcpy(string, "C+");
-    else if (grade_points_average >= 2)
+    else if (grade_points_average == 2.0f)
         strcpy(string, "C");
-    else if (grade_points_average >= 1.7)
+    else if (grade_points_average == 1.7f)
         strcpy(string, "C-");
-    else if (grade_points_average >= 1.3)
+    else if (grade_points_average == 1.3f)
         strcpy(string, "D+");
-    else if (grade_points_average >= 1)
+    else if (grade_points_average == 1.0f)
         strcpy(string, "D");
     else
         strcpy(string, "F");
