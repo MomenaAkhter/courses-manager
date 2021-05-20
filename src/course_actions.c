@@ -15,11 +15,6 @@ ID: 162 0763 042
 void course_actions_view_specific(struct Course* course, size_t index, bool show_id)
 {
     if (course != NULL) {
-        // char format[70];
-        // sprintf(format, "%s%-10.7s%-28.24s%-11.11s%.2f%s\n", show_id ? "%lu\t" : "", course->name, course->title, course->semester_name, 1.0f, show_id ? "\t\tu%lu, r%lu" : "");
-
-        // printf("%s\n", format);
-
         char grade_string[3];
         grade(course->grade_points, MIN(course->credits_counted, course->credits_passed), grade_string);
 
