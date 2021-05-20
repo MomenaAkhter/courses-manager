@@ -1,3 +1,8 @@
+/*
+Name: Momena Akhter Shukhi
+ID: 162 0763 042
+*/
+
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>

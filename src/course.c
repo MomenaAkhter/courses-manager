@@ -1,3 +1,8 @@
+/*
+Name: Momena Akhter Shukhi
+ID: 162 0763 042
+*/
+
 #include <stdlib.h>
 #include "course.h"
 

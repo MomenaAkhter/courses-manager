@@ -1,3 +1,8 @@
+/*
+Name: Momena Akhter Shukhi
+ID: 162 0763 042
+*/
+
 #ifndef __STRUCT_COURSE_H__
 #define __STRUCT_COURSE_H__
 
