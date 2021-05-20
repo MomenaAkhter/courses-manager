@@ -3,16 +3,17 @@ Name: Momena Akhter Shukhi
 ID: 162 0763 042
 */
 
-#include <ctype.h>
-#include <string.h>
-#include <stdio.h>
 #include "helpers.h"
-#include "structs/CourseList.h"
 #include "course_list.h"
+#include "structs/CourseList.h"
+#include <ctype.h>
+#include <stdio.h>
+#include <string.h>
 
-char *trim(char *str)
+// Trim a string, removing whitespaces from both ends
+char* trim(char* str)
 {
-    char *end;
+    char* end;
 
     // Trim leading space
     while (isspace((unsigned char)*str))
@@ -32,28 +33,35 @@ char *trim(char *str)
     return str;
 }
 
+// The following functions with prefix "print_" are associated with changing the color of the printed text on the shell
 void print_red(bool bold)
 {
     printf(bold ? "\033[1;31m" : "\033[0;31m");
 }
+
 void print_green(bool bold)
 {
     printf(bold ? "\033[1;32m" : "\033[0;32m");
 }
+
 void print_yellow(bool bold)
 {
     printf(bold ? "\033[1;33m" : "\033[0;33m");
 }
+
 void print_purple(bool bold)
 {
     printf(bold ? "\033[1;35m" : "\033[0;35m");
 }
+
+// Reset color of the next text that is going to be printed
 void print_reset()
 {
     printf("\033[0m");
 }
 
-void heading(const char *text)
+// Add a heading (a piece of text underlined with '=')
+void heading(const char* text)
 {
     print_yellow(false);
     printf("%s\n", text);
@@ -64,7 +72,7 @@ void heading(const char *text)
 }
 
 // Determine the grade using NSU's policies
-void grade(float grade_points, float credits, char *string)
+void grade(float grade_points, float credits, char* string)
 {
     float grade_points_average = grade_points / credits;
     if (grade_points_average == 4)

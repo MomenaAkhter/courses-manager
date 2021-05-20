@@ -3,39 +3,40 @@ Name: Momena Akhter Shukhi
 ID: 162 0763 042
 */
 
-#include <stdio.h>
-#include <string.h>
 #include "course_list.h"
+#include "course.h"
+#include "csv.h"
 #include "structs/CourseList.h"
 #include "structs/CsvWriteSession.h"
-#include "csv.h"
-#include "course.h"
+#include <stdio.h>
+#include <string.h>
 
-struct CourseList *course_list_empty()
+// Create an empty course list
+struct CourseList* course_list_empty()
 {
-    struct CourseList *course_list = (struct CourseList *)malloc(sizeof(struct CourseList));
+    struct CourseList* course_list = (struct CourseList*)malloc(sizeof(struct CourseList));
 
-    *course_list = (struct CourseList){.quantity = 0, .items = calloc(0, sizeof(struct Course))};
+    *course_list = (struct CourseList) { .quantity = 0, .items = calloc(0, sizeof(struct Course)) };
 
     return course_list;
 }
 
-struct CourseList *course_list_load(const char *file_path)
+// Load course list from a file
+struct CourseList* course_list_load(const char* file_path)
 {
-    FILE *file = fopen(file_path, "r");
+    FILE* file = fopen(file_path, "r");
 
     if (file == NULL)
         return NULL;
 
-    struct CourseList *course_list = course_list_empty();
+    struct CourseList* course_list = course_list_empty();
 
-    while (!feof(file))
-    {
+    while (!feof(file)) {
         struct Course course = course_empty();
 
-        csv_read_string(file, (char *)course.name);
-        csv_read_string(file, (char *)course.title);
-        csv_read_string(file, (char *)course.semester_name);
+        csv_read_string(file, (char*)course.name);
+        csv_read_string(file, (char*)course.title);
+        csv_read_string(file, (char*)course.semester_name);
         csv_read_float(file, &course.credits_counted);
         csv_read_float(file, &course.credits_passed);
         csv_read_float(file, &course.grade_points);
@@ -45,24 +46,24 @@ struct CourseList *course_list_load(const char *file_path)
 
     fclose(file);
 
-    course_list->source = (const char *)realloc((char *)course_list->source, sizeof(char) * 101);
-    strcpy((char *)course_list->source, file_path);
+    course_list->source = (const char*)realloc((char*)course_list->source, sizeof(char) * 101);
+    strcpy((char*)course_list->source, file_path);
 
     return course_list;
 }
 
-bool course_list_save(struct CourseList *course_list)
+// Save course list to a file
+bool course_list_save(struct CourseList* course_list)
 {
-    FILE *file = fopen("courses2.csv", "w"); // DEBUG
+    FILE* file = fopen("courses2.csv", "w"); // DEBUG
     // FILE *file = fopen(course_list->source, "w");
 
     if (file == NULL)
         return false;
 
-    struct CsvWriteSession *csv_write_session = csv_write_session_new(file);
+    struct CsvWriteSession* csv_write_session = csv_write_session_new(file);
 
-    for (int i = 0; i < course_list->quantity; i++)
-    {
+    for (int i = 0; i < course_list->quantity; i++) {
         struct Course course = course_list->items[i];
         csv_line_add_string(csv_write_session, course.name);
         csv_line_add_string(csv_write_session, course.title);
@@ -78,19 +79,22 @@ bool course_list_save(struct CourseList *course_list)
     return true;
 }
 
-size_t course_list_quantity(struct CourseList *course_list)
+// Quantity of items in a course list
+size_t course_list_quantity(struct CourseList* course_list)
 {
     return course_list->quantity;
 }
 
-void course_list_add(struct CourseList *course_list, struct Course course)
+// Add a new course to a course list
+void course_list_add(struct CourseList* course_list, struct Course course)
 {
     course_list->quantity++;
-    course_list->items = (struct Course *)realloc(course_list->items, sizeof(struct Course) * course_list->quantity);
+    course_list->items = (struct Course*)realloc(course_list->items, sizeof(struct Course) * course_list->quantity);
     course_list->items[course_list->quantity - 1] = course;
 }
 
-struct Course *course_list_get(struct CourseList *course_list, size_t index)
+// Get a course from a course list
+struct Course* course_list_get(struct CourseList* course_list, size_t index)
 {
     if (index < course_list->quantity)
         return &course_list->items[index];
@@ -98,7 +102,8 @@ struct Course *course_list_get(struct CourseList *course_list, size_t index)
         return NULL;
 }
 
-bool course_list_update(struct CourseList *course_list, size_t index, struct Course course)
+// Update a course in a course list
+bool course_list_update(struct CourseList* course_list, size_t index, struct Course course)
 {
     if (index >= course_list->quantity)
         return false;
@@ -116,7 +121,8 @@ bool course_list_update(struct CourseList *course_list, size_t index, struct Cou
     return true;
 }
 
-bool course_list_remove(struct CourseList *course_list, size_t index)
+// Remove a course in a course list
+bool course_list_remove(struct CourseList* course_list, size_t index)
 {
     if (index >= course_list->quantity)
         return false;
@@ -129,13 +135,13 @@ bool course_list_remove(struct CourseList *course_list, size_t index)
     return true;
 }
 
-void course_list_free(struct CourseList *course_list)
+// Free dynamically allocated memory blocks associated with a course list
+void course_list_free(struct CourseList* course_list)
 {
-    for (int i = 0; i < course_list->quantity; i++)
-    {
-        free((char *)course_list->items[i].name);
-        free((char *)course_list->items[i].title);
-        free((char *)course_list->items[i].semester_name);
+    for (int i = 0; i < course_list->quantity; i++) {
+        free((char*)course_list->items[i].name);
+        free((char*)course_list->items[i].title);
+        free((char*)course_list->items[i].semester_name);
     }
     free(course_list->items);
     free(course_list);
