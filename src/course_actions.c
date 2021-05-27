@@ -365,4 +365,8 @@ void course_actions_load(struct CourseList** course_list_handle)
     strcpy(file_path, (*course_list_handle)->source);
     course_list_free(*course_list_handle);
     *course_list_handle = course_list_load(file_path);
+
+    print_green(false);
+    printf("Successfully loaded the courses from storage.\n");
+    print_reset();
 }

@@ -11,13 +11,15 @@ ID: 162 0763 042
 void csv_read_string(FILE* file, char* string)
 {
     int j = 0;
-    for (int i = 0;; i++) {
+    while (!feof(file)) {
         char c;
         fscanf(file, "%c", &c);
 
+        // Whitespaces at the beginning will be ignored
         if (isspace(c) && j == 0)
             continue;
 
+        // Commas and end-of-files will end the string
         if (c == ',' || feof(file)) {
             string[j] = '\0';
             break;

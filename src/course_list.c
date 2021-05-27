@@ -41,7 +41,9 @@ struct CourseList* course_list_load(const char* file_path)
         csv_read_float(file, &course.credits_passed);
         csv_read_float(file, &course.grade_points);
 
-        course_list_add(course_list, course);
+        // If the name is blank, avoid adding the course
+        if (strlen(course.name) > 0)
+            course_list_add(course_list, course);
     }
 
     fclose(file);
@@ -55,8 +57,7 @@ struct CourseList* course_list_load(const char* file_path)
 // Save course list to a file
 bool course_list_save(struct CourseList* course_list)
 {
-    FILE* file = fopen("courses2.csv", "w"); // DEBUG
-    // FILE *file = fopen(course_list->source, "w");
+    FILE* file = fopen(course_list->source, "w");
 
     if (file == NULL)
         return false;
